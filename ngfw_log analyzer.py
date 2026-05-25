@@ -191,7 +191,7 @@ def print_table(result: pd.DataFrame, fields: list[str], top_n: int, total_rows:
     widths = [4]
     for f in fields:
         widths.append(col_width(result[f], FIELD_LABELS.get(f, f)))
-    widths += [7, 34]
+    widths += [12, 34]
 
     def row_str(cells, color=None):
         parts = []
@@ -212,10 +212,11 @@ def print_table(result: pd.DataFrame, fields: list[str], top_n: int, total_rows:
     print(c(Colors.CYAN, sep_line))
 
     for i, row in result.iterrows():
-        cnt   = row["count"]
+        cnt   = int(row["count"])
         pct   = cnt / total_rows * 100
         b     = bar(cnt, max_count)
-        cells = [str(i)] + [str(row[f]) for f in fields] + [f"{cnt} ({pct:.1f}%)", b]
+        # show full integer count (no K/M/B shortening)
+        cells = [str(i)] + [str(row[f]) for f in fields] + [f"{cnt:,} ({pct:.1f}%)", b]
 
         if i == 1:
             color = Colors.YELLOW
@@ -402,9 +403,9 @@ def main():
         if "app" in used_fields:
             parts.append(f"app={row.get('app','?')}")
         rule = row.get("securityRuleName", "?") if "securityRuleName" in used_fields else "?"
-        cnt  = row["count"]
+        cnt  = int(row["count"])
         print(c(Colors.YELLOW,
-            f"  • [{cnt:>5} событий] rule={rule} | {' | '.join(parts)}"
+            f"  • [{cnt:,} событий] rule={rule} | {' | '.join(parts)}"
         ))
     print()
 
