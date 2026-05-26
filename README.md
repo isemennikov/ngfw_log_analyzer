@@ -37,6 +37,28 @@
   ```bash
   python3 "ngfw_log_analyzer.py" logs.csv --sort-by srcZoneName dstZoneName deviceName
   ```
+- Один фильтр
+  ```bash
+  python3 ngfw_analyzer.py logs.csv --port=443
+  ```
+- Несколько вместе
+  ```bash
+  python3 ngfw_analyzer.py logs.csv --srcip=10.0.0.* --port=80,443 --action=allow
+  ```
+- Wildcard
+  ```bash
+  python3 ngfw_analyzer.py logs.csv --app=*http* --rule=*deny*
+  ```
+- Диапазон портов
+  ```bash
+  python3 ngfw_analyzer.py logs.csv --port=1024-65535 --proto=TCP
+  ```
+
+- Комбо с --sort-by
+  ```bash
+  python3 ngfw_analyzer.py logs.csv --port=4506 --action=allow --sort-by app
+  ```
+
 - Топ-30 + экспорт:
   ```bash
   python3 "ngfw_log_analyzer.py" logs.csv --top 30 --export-json out.json --export-csv out.csv
@@ -46,7 +68,16 @@
   python3 "ngfw_log_analyzer.py" logs.json --sort-by contextName dstZoneName
   ```
 
-
+## Достпные фильтры 
+  | Ключ     | Поле             |
+| -------- | ---------------- |
+| --srcip  | srcAddr          |
+| --dstip  | dstAddr          |
+| --port   | dstPort          |
+| --proto  | ipProtocol       |
+| --app    | app              |
+| --rule   | securityRuleName |
+| --action | action           |
 
 ## Деактивация виртуального окружения
 ```bash
